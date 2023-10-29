@@ -2,20 +2,20 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from attention import SelfAttention
-from residual import ResidualBlock
+from VAE_attention import SelfAttention
+from VAE.VAE_residual import ResidualBlock
 
 
 class Encoder(nn.Sequential):
     def __init__(self):
         super().__init__(
-            # x:(b, 3, w, h) => (b, 128, w, h)
+            # x:(b, 3, h, w) => (b, 128, h, w)
             self.conv_block(3, 128, 128, 128, 1, 1),
-            # x:(b, 128, w, h) => (b, 256, w/2, h/2)
+            # x:(b, 128, h, w) => (b, 256, h/2, w/2)
             self.conv_block(128, 128, 128, 256, 2, 0),
-            # x:(b, 256, w/2, h/2) => (b, 512, w/4, h/4)
+            # x:(b, 256, h/2, w/2) => (b, 512, h/4, w/4)
             self.conv_block(256, 256, 256, 512, 2, 0),
-            # x:(b, 512, w/4, h/4) => (b, 512, w/8, h/8)
+            # x:(b, 512, h/4, w/4) => (b, 512, h/8, w/8)
             self.conv_block(512, 512, 512, 512, 2, 0),
 
             ResidualBlock(512, 512),
