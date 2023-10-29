@@ -49,6 +49,9 @@ class Encoder(nn.Sequential):
         return x
 
     def conv_block(self, conv_in: int, conv_out: int, res_in: int, res_out: int, stride: int, padding: int):
+        '''
+        return a sequential model consist of 1 conv2d and 2 residual blocks
+        '''
         return nn.Sequential([
             nn.Conv2d(conv_in, conv_out, kernel_size=3,
                       stride=stride, padding=padding),
