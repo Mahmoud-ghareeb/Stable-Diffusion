@@ -3,7 +3,7 @@ import torch.nn as nn
 from torch.nn import functional as F
 
 from attention import SelfAttention
-from decoder import ResidualBlock
+from residual import ResidualBlock
 
 
 class Encoder(nn.Sequential):
