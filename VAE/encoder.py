@@ -41,9 +41,12 @@ class Encoder(nn.Sequential):
 
         # noise => N(0, 1)
         # x => N(mean, var)
-        x = mean + stdev * noise  # to convert from N(0,1) to N(mean, var)
+        # to convert from N(0,1) to N(mean, var)
+        x = mean + stdev * noise
+        # exist in the paper no explanation :(
+        x *= 0.18215
 
-        return x * 0.18215  # exist in the paper no explanation :(
+        return x
 
     def conv_block(self, conv_in: int, conv_out: int, res_in: int, res_out: int, stride: int, padding: int):
         return nn.Sequential([
