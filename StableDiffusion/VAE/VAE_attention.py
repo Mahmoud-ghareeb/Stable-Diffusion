@@ -13,8 +13,10 @@ class VAE_Attention(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
 
         res = x
+
         b, c, h, w = x.shape
         # x:(b, c, h, w) => (b, h*w, c)
+        x = self.gn(x)
         x = x.view(b, c, h*w).transpose(-1, -2)
         x = self.attention(x)
         x = x.transpose(-1, -2).view(b, c, h, w)
