@@ -23,7 +23,7 @@ class CLIPEmbedding(nn.Module):
         self.embd = nn.Embedding(args.vocab_size, args.d_model)
         self.pos_embd = nn.Parameter(torch.zeros(args.seq_len, args.d_model))
 
-    def forward(self, x: torch.LongTensor) -> torch.FloatTensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.embd(x)
 
         return x + self.pos_embd
@@ -39,15 +39,21 @@ class CLIPLayer(nn.Module):
         self.linear1 = nn.Linear(args.d_model, 4*args.d_model)
         self.linear2 = nn.Linear(4*args.d_model, args.d_model)
 
-    def forward(self, x: torch.LongTensor) -> torch.FloatTensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
 
+        res = x
         x = self.norm1(x)
         x = self.atten(x)
+        x += res
+
+        res = x
         x = self.norm2(x)
         x = self.linear1(x)
+        # QuickGELU function => no explanation why they used it, its just works well in practice
+        x = x * F.sigmoid(1.702 * x)
         x = self.linear2(x)
 
-        return x
+        return x + res
 
 
 class CLIP(nn.Module):
